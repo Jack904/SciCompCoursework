@@ -26,8 +26,7 @@ RK4_step(dot_x,4,2,1)
 
 
 def solve_to(ode,x_1,t_1,t_2,deltat_max,ode_solver):
-    no_of_steps = (t_2 - t_1)//deltat_max
-    h = (t_2-t_1)/no_of_steps
+    h = deltat_max
     x_total = [x_1]
     t_total = [t_1]
     x_n = x_1
@@ -40,7 +39,7 @@ def solve_to(ode,x_1,t_1,t_2,deltat_max,ode_solver):
                 h = abs(t_n-t_2)
             t_n = t_n + h
             x_n = x_n_1
-            x_total.append(x_n)
+            x_total.append(x_n_1)
             t_total.append(t_n)
     elif ode_solver == 'RK4':
         while t_n < t_2:
@@ -53,28 +52,30 @@ def solve_to(ode,x_1,t_1,t_2,deltat_max,ode_solver):
                 h = abs(t_n-t_2)
             t_n = t_n + h
             x_n=x_n_1
-            x_total.append(x_n)
+            x_total.append(x_n_1)
             t_total.append(t_n)
     return [x_total, t_total]
 err = []
 errRK4 = []
-deltat_max = np.linspace(0.00001,1,100000)
+deltat_max = np.linspace(0.000001,0.0001,100)
 for i in range(len(deltat_max)):
     [x_total, t_total] = solve_to(dot_x,1,0,1,deltat_max[i],'Euler')
-    error = abs(x_total[-1]-real_x(t_total[-1]))
+    error = abs(x_total[-1]-real_x(1))
     err.append(error)
     #print(x_total[len(x_total)-1])
 for i in range(len(deltat_max)):
     [x_total1, t_total1] = solve_to(dot_x,1,0,1,deltat_max[i],'RK4')
-    error = abs(x_total1[-1]-real_x(t_total1[-1]))
+    error = abs(x_total1[-1]-real_x(1))
     errRK4.append(error)
- 
-#[x_total3, t_total3] = solve_to(dot_x,1,0,5,deltat_max[1],'Euler')
-
+#print(x_total1)
+[x_total3, t_total3] = solve_to(dot_x,1,0,5,deltat_max[1],'Euler')
+print(errRK4)
 #plt.plot(t_total3, x_total3)
 #plt.plot(t_total1, x_total1)
 #plt.plot(t_total,real_x(t_total))
 plt.loglog(deltat_max,err)
 plt.loglog(deltat_max,errRK4)
+plt.xlabel('Deltat Max')
+plt.ylabel('Error')
 plt.show()
     
