@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 o = -1
 beta = 1
-
+conds = [beta, o]
 
 def test_ode(t,u,beta,o):
     du1_dt = beta*u[0]-u[1] + o*u[0]*(((u[1])**2) + ((u[0])**2))
@@ -24,5 +24,5 @@ plt.show()
 initial_guess = [0.5,1,6]
 
 
-result = scipy.optimize.root(shooting, x0 = initial_guess, args = (test_ode, [beta, o]))
-print(result)
+result = scipy.optimize.root(shooting, x0 = initial_guess, args = (test_ode, conds))
+print(result.x)
