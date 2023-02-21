@@ -26,13 +26,13 @@ if __name__ == "__main__":
     # SOlving the ode
     predator = scipy.integrate.solve_ivp(ode,[0, 100],[0.5,0.5],args=condish, rtol = 1e-4)
     #Plotting ODE
-    plt.plot(predator.t,predator.y[0,:], label = 'X')
-    plt.plot(predator.t,predator.y[1,:], label = 'y')
-    plt.plot(0.81908554,0.16627586,marker = 'o')
-    plt.legend()
-    plt.show()
 
     initial_guess = [0.8, 0.2,30]
     result = scipy.optimize.root(shooting, x0 = initial_guess, args=(ode, condish))
 
     print(result)
+    plt.plot(predator.t,predator.y[0,:], label = 'X')
+    plt.plot(predator.t,predator.y[1,:], label = 'y')
+    plt.plot(result.x[0],result.x[1],marker = 'o')
+    plt.legend()
+    plt.show()

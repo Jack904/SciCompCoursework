@@ -13,16 +13,18 @@ def test_ode(t,u,beta,o):
 
     return [du1_dt, du2_dt]
 
-solution = scipy.integrate.solve_ivp(test_ode,[0,10],[1,1],args = [beta,o],rtol = 1e-5)
+solution = scipy.integrate.solve_ivp(test_ode,[0,30],[0.5,0.5],args = [beta,o],rtol = 1e-5)
 #Plotting ODE
-plt.plot(solution.t,solution.y[0,:], label = 'X')
-plt.plot(solution.t,solution.y[1,:], label = 'y')
-plt.plot(1.00040380,-0.000808734428, marker = 'o')
+
+
+initial_guess = [0.7,-0.01,6]
+
+
+result = scipy.optimize.root(shooting, x0 = initial_guess, args = (test_ode, conds), tol = 1e-6)
+print(result.x)
+
+plt.plot(solution.t,solution.y[0,:], label = 'u1')
+plt.plot(solution.t,solution.y[1,:], label = 'u2')
+plt.plot(result.x[0],result.x[1], marker = 'o')
 plt.legend()
 plt.show()
-
-initial_guess = [0.5,1,6]
-
-
-result = scipy.optimize.root(shooting, x0 = initial_guess, args = (test_ode, conds))
-print(result.x)
