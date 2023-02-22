@@ -11,7 +11,7 @@ def ode(t,y,a,b,d): #Keeping t in in case our ode reuires it
 
 
 def shooting(x,F,conds): #Finds the points and time period of the limit cycle
-    condition_1 = x[:len(x)-1] - scipy.integrate.solve_ivp(F,[0, x[len(x)-1]],x[:len(x)-1], args=conds, rtol = 1e-4).y[:,-1]
+    condition_1 = x[:len(x)-1] - scipy.integrate.solve_ivp(F,[0, x[len(x)-1]],x[:len(x)-1], args=conds, rtol = 1e-6).y[:,-1]
     condition_2 = F(0,x[:len(x)-1],*conds)[0] 
 
     return [*condition_1,condition_2] # THe * gets rid of the list within
