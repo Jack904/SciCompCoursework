@@ -27,7 +27,7 @@ def natural_parameter(ode, initial_point, p0, p1, no_of_steps):
         if result.success == True:
             
             x_vals.append(result.x[1])
-            c_vals.append(x0[0])
+            c_vals.append(result.x[0])
     return [x_vals, c_vals]
 
 def psuedo_parameter(ode, initial_point,p0,p1, no_of_steps):
@@ -70,10 +70,9 @@ def ode(t,y,a=1,b=2,d=3): #Keeping t in in case our ode reuires it
 
 
 if __name__ == "__main__":
-    # x,y = psuedo_parameter(funct,[(-2,1.52137971),(-1.995996,1.52070571)],-2,2,1000)
     x_true = np.linspace(-2,2,100)
     y_true = funct((0,-x_true))
-    y,x = natural_parameter(funct, 1.52, -2,2,100)
+    y,x = natural_parameter(funct, 1.52, -2,2,10000)
     px,py = psuedo_parameter(funct, 1.52 ,-2,2, 50)
     
     plt.plot(px,py,'.',label = 'Pseudo Arclength cont')
