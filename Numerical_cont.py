@@ -74,8 +74,14 @@ if __name__ == "__main__":
     y_true = funct((0,-x_true))
     y,x = natural_parameter(funct, 1.52, -2,2,10000)
     px,py = psuedo_parameter(funct, 1.52 ,-2,2, 50)
-    
-    plt.plot(px,py,'.',label = 'Pseudo Arclength cont')
+    initial_guess = [0.8, 0.2,30]
+    a =1
+    b =0.1
+    d =0.1
+    condish = [a,b,d]
+
+    result = scipy.optimize.root(shooting, x0 = initial_guess, args=(ode, condish))
+    plt.plot(x,y,'.',label = 'Natural cont')
     plt.plot(y_true,x_true, label = 'Real' )
     #plt.plot(x,y, '.' ,label='Natural Continuation')
     plt.legend(loc = 'upper left')
