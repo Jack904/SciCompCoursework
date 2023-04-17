@@ -97,22 +97,22 @@ if __name__ == "__main__":
     # b =0.1
     # d =0.1
     # condish = [a,b,d]
-    y,x = psuedo_parameter(funct, (0.6,0.6), 0,1,10000, discretisation='shooting')
-
-    # plt.plot(x[0],y,'.',label = 'Y1')
+    # y,x = psuedo_parameter(ode, (0.006,0.006), 0,1,10000, discretisation='shooting')
+    # print(x[0])
+    # # plt.plot(x[0],y,'.',label = 'Y1')
     # plt.plot(x[1],y,'.',label = 'Y2')
 
-    # # plt.plot(y_true,x_true, label = 'Real' )
-    # plt.plot(x,y, '.' ,label='Natural Continuation')
-    plt.legend(loc = 'upper left')
-    plt.show()
+    # # # plt.plot(y_true,x_true, label = 'Real' )
+    # # plt.plot(x,y, '.' ,label='Natural Continuation')
+    # plt.legend(loc = 'upper left')
+    # plt.show()
 
 
 
 
     # Plotting Our hopf Bifurcation and checking if shooting works with it
-    # predator = scipy.integrate.solve_ivp(ode,[-10, 100],[0.5,0.5],args = [0],rtol = 1e-4)
-    # plt.plot(predator.t,predator.y[0,:], label = 'U1')
-    # plt.plot(predator.t,predator.y[1,:], label = 'U2')
-    # plt.show()
+    predator = scipy.integrate.solve_ivp(ode,[-10, 100],[0.006,0.006],args = [1],rtol = 1e-8)
+    plt.plot(predator.t,predator.y[0,:], label = 'U1')
+    plt.plot(predator.t,predator.y[1,:], label = 'U2')
+    plt.show()
 
