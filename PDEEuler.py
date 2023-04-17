@@ -7,11 +7,9 @@ def ExpEuler(u, alpha, beta, a, b, t_end, N, D=1, C = 0.49):
     dx = b-a/N
     dt = ((dx**2)/D)*(C)
     n_of_t_steps = ceil(t_end/dt)
-    print(dt)
     x_points = np.linspace(a,b,N+1)
     x_int = x_points[1:-1]
     U = np.zeros((n_of_t_steps+1,N-1))  
-    print(U) 
     U[0,:] = u(x_int,a,b)
     for n in range(n_of_t_steps):
     
@@ -27,8 +25,15 @@ def InitialCond(x,alpha,beta):
     return np.sin((np.pi*(x-alpha))/(beta-alpha))
 
 if __name__ == '__main__':
-    U,x,N_time = ExpEuler(InitialCond,0,0,0,10,10,20)
-  
+    a = 0
+    b = 1
+    alpha = 0
+    beta = 0
+    N = 20
+    t_end = 10
+
+    U,x,N_time = ExpEuler(InitialCond,alpha,beta,a,b,t_end,N)
+    print(U)
     fig, ax = plt.subplots()
     ax.set_ylim(0,1)
     ax.set_ylabel(f'$x$')
@@ -36,7 +41,7 @@ if __name__ == '__main__':
     line, = ax.plot(x,U[0,:])
     def animate(i):
         line.set_data((x,U[i,:]))
-        return (line,)
+        return line,
     
     ani = animation.FuncAnimation(fig, animate, frames = range(N_time), blit = True, interval = 100)
     plt.show()
