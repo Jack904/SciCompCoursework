@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from math import ceil
+from JackOde import solve_to
 
 def ExpEuler(u, alpha, beta, a, b, t_end, N, D=1, C = 0.49):
     dx = b-a/N
@@ -18,12 +19,13 @@ def ExpEuler(u, alpha, beta, a, b, t_end, N, D=1, C = 0.49):
                 U[n+1, 0] = U[n,0] + C*(alpha - 2*U[n,0] + U[n,1])
             if i > 0 and i< N - 2:
                 U[n+1, i] = U[n,i] + C*(U[n,i+1] - 2*U[n,i] + U[n,i-1])
-            if i == N-1:
-                U[n+1, i-1] = U[n,i-1] + C*(beta - 2*U[n,i-1] + U[n,i-2])
+            if i == N-2:
+                U[n+1, N-2] = U[n,N-2] + C*(beta - 2*U[n,N-2] + U[n,N-3])
     return U, x_int, n_of_t_steps
 def InitialCond(x,alpha,beta):
     return np.sin((np.pi*(x-alpha))/(beta-alpha))
-
+def MethodOfLines(alpha,beta,no_of_steps):
+    rhs = np.zeros(no_of_steps)
 if __name__ == '__main__':
     a = 0
     b = 1
@@ -31,15 +33,16 @@ if __name__ == '__main__':
     beta = 0
     N = 20
     t_end = 10
-
+   
     U,x,N_time = ExpEuler(InitialCond,alpha,beta,a,b,t_end,N)
-    print(U)
+
     fig, ax = plt.subplots()
     ax.set_ylim(0,1)
     ax.set_ylabel(f'$x$')
     ax.set_xlabel(f'$u(x,t)$')
     line, = ax.plot(x,U[0,:])
     def animate(i):
+        
         line.set_data((x,U[i,:]))
         return line,
     

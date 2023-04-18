@@ -66,12 +66,14 @@ def psuedo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = lam
         result = scipy.optimize.root(myfunc, x0 = prediction)
         xi_minus_one = xi
         xi = result.x
+        
         if result.success == True:
             x_vals[0,i+1] = result.x[1]
             x_vals[1,i+1] = result.x[2]
             # x_vals.append(result.x[1:])
             c_vals.append(result.x[0])
-
+            print(x_vals[0,i+1])
+            print(x_vals[1,i+1])
         if i > no_of_steps:
             break
     return [c_vals, x_vals]
@@ -97,22 +99,22 @@ if __name__ == "__main__":
     # b =0.1
     # d =0.1
     # condish = [a,b,d]
-    # y,x = psuedo_parameter(ode, (0.006,0.006), 0,1,10000, discretisation='shooting')
-    # print(x[0])
-    # # plt.plot(x[0],y,'.',label = 'Y1')
-    # plt.plot(x[1],y,'.',label = 'Y2')
+    y,x = psuedo_parameter(ode, (0.06,0.06), 0,1,1000, discretisation='shooting')
+    
+    plt.plot(y,x[0][0:498],'.',label = 'Y1')
+    plt.plot(y,x[1][0:498],'.',label = 'Y2')
 
-    # # # plt.plot(y_true,x_true, label = 'Real' )
-    # # plt.plot(x,y, '.' ,label='Natural Continuation')
-    # plt.legend(loc = 'upper left')
-    # plt.show()
+    # # plt.plot(y_true,x_true, label = 'Real' )
+    # plt.plot(x,y, '.' ,label='Natural Continuation')
+    plt.legend(loc = 'upper left')
+    plt.show()
 
 
 
 
     # Plotting Our hopf Bifurcation and checking if shooting works with it
-    predator = scipy.integrate.solve_ivp(ode,[-10, 100],[0.006,0.006],args = [1],rtol = 1e-8)
-    plt.plot(predator.t,predator.y[0,:], label = 'U1')
-    plt.plot(predator.t,predator.y[1,:], label = 'U2')
-    plt.show()
+    # predator = scipy.integrate.solve_ivp(ode,[-10, 100],[0.006,0.006],args = [1],rtol = 1e-8)
+    # plt.plot(predator.t,predator.y[0,:], label = 'U1')
+    # plt.plot(predator.t,predator.y[1,:], label = 'U2')
+    # plt.show()
 
