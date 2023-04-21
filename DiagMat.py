@@ -16,7 +16,7 @@ def q(x):
     return np.ones(np.size(x))
 def Grid(N,a,b):
     dx = abs((b-a)/N)
-    print(dx)
+    
     GridSpace = np.linspace(a,b,N)
     x = GridSpace[1:-1]
     return GridSpace, dx,x

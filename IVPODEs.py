@@ -16,7 +16,7 @@ def RK4_step(ode,x_0,t_0,h):
     x_1 = x_0 + (1/6)*(k1 +2*k2 +2*k3 +k4)*(h)
     return x_1
 
-def solve_to(ode,x_1,t_1,t_2,deltat_max,ode_solver):
+def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver):
     h = deltat_max
     x_total = [x_1]
     t_total = [t_1]
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     #     error = abs(x_total1[-1]-real_x(1))
     #     errRK4.append(error)
     #print(x_total1)
-    [x_total3, t_total3] = solve_to(dot_x,1,0,5,0.1,'RK4')
+    [x_total3, t_total3] = solve_to(dot_x,0,5,1,0.1,'RK4')
     
     #plt.plot(t_total3, x_total3)
     #plt.plot(t_total1, x_total1)
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     # plt.xlabel('Deltat Max')
     # plt.ylabel('Error')
     # plt.show()
-    [x_total4, t_total4] = solve_to(hopf_ode,[0.006,0.006],0,10,0.1,'RK4')
+    [x_total4, t_total4] = solve_to(hopf_ode,0,10,[0.006,0.006],0.1,'RK4')
     
     plt.plot(t_total4,x_total4,'o')
     plt.show()
