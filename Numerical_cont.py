@@ -174,7 +174,7 @@ if __name__ == "__main__":
     # b =0.1
     # d =0.1
     # condish = [a,b,d]
-    y,x = psuedo_parameter(hopf_ode, (1.5,0,6), 0,2,30, discretisation='shooting')
+    y,x = psuedo_parameter(hopf_ode, (1,0,6), 0,2,1000, discretisation='shooting')
     plt.plot(y,x[0][0:len(y)],'o', label = 'Y1')
     plt.plot(y,x[1][0:len(y)],'o', label = 'Y2')
     
