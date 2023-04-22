@@ -66,6 +66,10 @@ def hopf_ode(t,y): #Keeping t in in case our ode reuires it
     dy_dt = y[1] +y[0] -y[1]*((y[0])**2 +(y[1])**2)
 
     return [dx_dt, dy_dt]
+def VanDerPol_Ode(t,y,mu):
+    dydt = y[1]
+    dydt2 = mu*(1 -y[0]**2)*y[1] - y[0]
+    return [dydt, dydt2]
 def dot_x(t,x):
     return x
 
@@ -105,7 +109,7 @@ if __name__ == '__main__':
     # plt.xlabel('Deltat Max')
     # plt.ylabel('Error')
     # plt.show()
-    [x_total4, t_total4] = solve_to(hopf_ode,0,10,[0.006,0.006],0.1,'RK4')
+    [x_total4, t_total4] = solve_to(VanDerPol_Ode,0,10,[0.006,0.006],0.1,'RK4', args = [0.5])
     
     plt.plot(t_total4,x_total4,'o')
     plt.show()
