@@ -4,12 +4,29 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def ConstructAandB(n,bc_left,bc_right):
-    k = np.ones(n-1)
-    A = np.diag(-2*np.ones(n)) + np.diag(k, -1) + np.diag(k, 1)
-    B = np.zeros(n)
-    B[0] = bc_left
-    B[n-1] = bc_right
+def ConstructAandB(n,bc_left,bc_right,bc_left_condition='Dirichlet',
+                   bc_right_condition = 'Dirichlet', dx=0, robin_gamma = 0):
+    if bc_left_condition == 'Dirichlet' and bc_right_condition == 'Dirichlet':
+        k = np.ones(n-1)
+        A = np.diag(-2*np.ones(n)) + np.diag(k, -1) + np.diag(k, 1)
+        B = np.zeros(n)
+        B[0] = bc_left
+        B[n-1] = bc_right
+    elif bc_left_condition == 'Dirichlet' and bc_right_condition == 'Neumann':
+        k = np.ones(n)
+        A = np.diag(-2*np.ones(n+1)) + np.diag(k, -1) + np.diag(k, 1)
+        A[n+1,n] = 2
+        B = np.zeros(n+1)
+        B[0] = bc_left
+        B[n] = 2*bc_right*dx
+    elif bc_left_condition == 'Dirichlet' and bc_right_condition == 'Robin':
+        k = np.ones(n)
+        A = np.diag(-2*np.ones(n+1)) + np.diag(k, -1) + np.diag(k, 1)
+        A[n+1,n] = 2
+        A[n+1,n+1] = -2(1+robin_gamma*dx)
+        B = np.zeros(n+1)
+        B[0] = bc_left
+        B[n] = 2*bc_right*dx
 
     return A, B
 def q(x):
@@ -41,6 +58,7 @@ if __name__ == '__main__':
     A, B = ConstructAandB(N,0,0)
 
     Gridspace, dx, x = Grid(N,0,1)
+    print(dx)
     # u = np.linalg.solve(A,-B - dx**2 * (q(x)))
     sol = solve_ivp(PDE , (0, 1), InitialCond(DiffusionIC(x,0,1),0,0),args = [D, A, B, dx])
     t = sol.t

@@ -16,13 +16,13 @@ def RK4_step(ode,x_0,t_0,h):
     x_1 = x_0 + (1/6)*(k1 +2*k2 +2*k3 +k4)*(h)
     return x_1
 
-def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver):
+def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver, args = []):
     h = deltat_max
     x_total = [x_1]
     t_total = [t_1]
     x_n = x_1
     t_n = t_1
-    output_check = ode(0,x_1)
+    output_check = ode(0,x_1,*args)
     if type(output_check) == int:
         order = 1
     else:
@@ -31,11 +31,9 @@ def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver):
     if ode_solver == 'Euler':
 
         while t_n < t_2:
-            if order > 1:
-                for i in range(order):
-                    x_n_1[i] = x_n[i] + h*(ode(t_n,x_n))[i]
-            else:
-                x_n_1 = x_n + h*(ode(t_n,x_n))
+            
+            x_n_1 = x_n + h*np.array(ode(t_n,x_n,*args))
+            
             if t_n+h > t_2:
                 h = abs(t_n-t_2)
             t_n = t_n + h
@@ -44,26 +42,23 @@ def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver):
             t_total.append(t_n)
     elif ode_solver == 'RK4':
         while t_n < t_2:
-            if order > 1:
-                for i in range(order):
+            
                     
-                    k1 = ode(t_n,x_n)[i]
-                    k2 = ode(t_n + h/2,x_n + h*(k1/2)*np.ones(len(x_n)))[i]
-                    k3 = ode(t_n + h/2,x_n + h*(k2/2)*np.ones(len(x_n)))[i]
-                    k4 = ode(t_n + h,x_n + h*k3*np.ones(len(x_n)))[i]
-                    x_n_1[i] = x_n[i] + (1/6)*(k1 +2*k2 +2*k3 +k4)*(h)
-            else:
+            k1 = ode(t_n,x_n,*args)
                 
-                k1 = ode(t_n,x_n)
-                k2 = ode(t_n + h/2,x_n +h*(k1/2))
-                k3 = ode(t_n + h/2,x_n +h*(k2/2))
-                k4 = ode(t_n + h,x_n +h*k3)
-                x_n_1 = x_n + (1/6)*(k1 +2*k2 +2*k3 +k4)*(h)
+            k2 = ode(t_n + h/2,x_n + (h/2)*np.array(k1),*args)
+            k3 = ode(t_n + h/2,x_n + (h/2)*np.array(k2),*args)
+            k4 = ode(t_n + h,x_n + h*np.array(k3), *args)
+                        
+            x_n_1 = x_n + (1/6)*(k1 +2*np.array(k2) +2*np.array(k3) +k4)*(h)
+            
             if t_n+h > t_2:
                 h = abs(t_n-t_2)
             t_n = t_n + h
             x_n=x_n_1
+            
             x_total.append(x_n_1)
+            
             t_total.append(t_n)
     return [x_total, t_total]
 def hopf_ode(t,y): #Keeping t in in case our ode reuires it
