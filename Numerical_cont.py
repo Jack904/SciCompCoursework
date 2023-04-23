@@ -56,7 +56,6 @@ def natural_parameter(ode, initial_point, p0, p1, no_of_steps, discretisation = 
         output_check = ode(0,initial_point,p0)
         for i in range(no_of_steps):
             x0[0] +=  h
-            # x0[-1]-=0.25
             myfunc = lambda u: np.concatenate(([shooting(u[1:],ode,[u[0]])[0]],[shooting(u[1:],ode,[u[0]])[1]],[shooting(u[1:],ode,[u[0]])[2]],[u[0]-x0[0]]))
             
             
@@ -100,9 +99,7 @@ def pseudo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = [])
             i += 1
             
             for j in range(len(xi)):
-                print(j)
                 secant[j] = xi[j] - xi_minus_one[j] 
-                print(secant[j])
             
             prediction = xi + secant
             if len(output_check) == 1:
@@ -173,10 +170,6 @@ def hopf_ode(t,y,b): #Keeping t in in case our ode reuires it
     dy_dt = b*y[1] +y[0] -y[1]*((y[0])**2 +(y[1])**2)
 
     return [dx_dt, dy_dt]
-
-#shooting(,ode,[1,2,3])
-
-
 
 
 if __name__ == "__main__":
