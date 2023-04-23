@@ -76,10 +76,11 @@ def pseudo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = [])
     if discretisation == []:
         h = (abs(p0-p1))/no_of_steps
     
-        [y1, c1]  = natural_parameter(ode, initial_point,p0,p0+2*h,2)
+        [c1, y1]  = natural_parameter(ode, initial_point,p0,p0+2*h,2)
         output_check = ode(0,initial_point,p0)
         if type(output_check) != list:
             output_check = [output_check]
+        
         xi_minus_one = [p0+h, *y1[1][0:len(output_check)]]
         xi = [p0+2*h,*y1[2][0:len(output_check)]]
     
@@ -173,7 +174,7 @@ def hopf_ode(t,y,b): #Keeping t in in case our ode reuires it
 
 
 if __name__ == "__main__":
-    y,x = natural_parameter(funct, 1.521, -2,2,100)
+    x,y = natural_parameter(funct, 1.521, -2,2,100)
     px,py = pseudo_parameter(funct, 1.521 ,-2,4, 100)
     # initial_guess = [0.8, 0.2,30]
     # a =1
