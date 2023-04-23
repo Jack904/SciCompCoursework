@@ -13,8 +13,10 @@ def funct(t,x,c):
 def natural_parameter(ode, initial_point, p0, p1, no_of_steps, discretisation = []):
 
     if discretisation == []:
-        x0 = [p0,*initial_point]
-        
+        if type(initial_point) != int or type(initial_point) != float:
+            x0 = [p0,*initial_point]
+        else:
+            x0 = [p0,initial_point]
         x_vals = [initial_point]
         c_vals = [p0]
         h = (abs(p0-p1))/no_of_steps
