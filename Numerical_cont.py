@@ -1,5 +1,5 @@
 import scipy
-from Predator_prey import *
+from Numerical_Shooting import *
 import numpy as np
 import matplotlib.pyplot as plt
 import pytest # Look into this
@@ -64,7 +64,7 @@ def natural_parameter(ode, initial_point, p0, p1, no_of_steps, discretisation = 
                 c_vals.append(result.x[0])
     return [x_vals, c_vals]
 
-def psuedo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = lambda x: x):
+def psuedo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = []):
 
     if discretisation == []:
         h = (abs(p0-p1))/no_of_steps
