@@ -18,7 +18,7 @@ def natural_parameter(ode, initial_point, p0, p1, no_of_steps, discretisation = 
             x0 = [p0,*initial_point]
         else:
             x0 = [p0,initial_point]
-        x_vals = [initial_point]
+        y_vals = [initial_point]
         c_vals = [p0]
         h = (abs(p0-p1))/no_of_steps
         
@@ -28,7 +28,7 @@ def natural_parameter(ode, initial_point, p0, p1, no_of_steps, discretisation = 
             output_check = [output_check]
         for i in range(no_of_steps):
             x0[0] +=  h
-            # x0[-1]-=0.25
+            
             if len(output_check) == 1:
                 myfunc = lambda u: np.concatenate(([ode(0,u[1],x0[0])],[u[0]-x0[0]])) 
             else:
@@ -44,12 +44,12 @@ def natural_parameter(ode, initial_point, p0, p1, no_of_steps, discretisation = 
 
             if result.success == True:
                 
-                x_vals.append(result.x[1:])
+                y_vals.append(result.x[1:])
                 c_vals.append(result.x[0])
     elif discretisation == 'shooting':
         x0 = [p0,*initial_point[0:-1]]
         time_period = initial_point[-1]
-        x_vals = [initial_point[0:-1]]
+        y_vals = [initial_point[0:-1]]
         c_vals = [p0]
         h = (abs(p0-p1))/no_of_steps
         
@@ -67,9 +67,9 @@ def natural_parameter(ode, initial_point, p0, p1, no_of_steps, discretisation = 
 
             if result.success == True:
                 
-                x_vals.append([*result.x[1:-1]])
+                y_vals.append([*result.x[1:-1]])
                 c_vals.append(result.x[0])
-    return [x_vals, c_vals]
+    return [c_vals, y_vals]
 
 def pseudo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = []):
 
@@ -83,13 +83,13 @@ def pseudo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = [])
         xi_minus_one = [p0+h, *y1[1][0:len(output_check)]]
         xi = [p0+2*h,*y1[2][0:len(output_check)]]
     
-        x_vals = np.zeros((len(output_check), no_of_steps+2))
+        y_vals = np.zeros((len(output_check), no_of_steps+2))
         c_vals = np.zeros(no_of_steps+2)
         c_vals[0] = p0
         c_vals[1] = p0+h
         for i in range(len(output_check)):
-            x_vals[i,0] = xi_minus_one[i+1]
-            x_vals[i,1] = [*y1[1]][i]
+            y_vals[i,0] = xi_minus_one[i+1]
+            y_vals[i,1] = [*y1[1]][i]
     
         secant = np.zeros(len(xi_minus_one))
 
@@ -112,7 +112,7 @@ def pseudo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = [])
             xi = result.x
             if result.success == True:
                 for k in range(len(result.x)-1):
-                    x_vals[k,i+1] = result.x[k+1]
+                    y_vals[k,i+1] = result.x[k+1]
                 c_vals[i+1] = result.x[0]
             
             if i >= no_of_steps:
@@ -127,11 +127,11 @@ def pseudo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = [])
         xi = [p0+2*h,*y1[2][0:2]]
         
         time_period = y1[1][1]
-        x_vals = np.zeros((len(initial_point)-1, no_of_steps+2))
-        x_vals[0,0] = xi_minus_one[1]
-        x_vals[1,0] = xi_minus_one[2]
-        x_vals[0,1] = [*y1[1]][0]
-        x_vals[1,1] = [*y1[1]][1]
+        y_vals = np.zeros((len(initial_point)-1, no_of_steps+2))
+        y_vals[0,0] = xi_minus_one[1]
+        y_vals[1,0] = xi_minus_one[2]
+        y_vals[0,1] = [*y1[1]][0]
+        y_vals[1,1] = [*y1[1]][1]
         c_vals = [p0, p0+h]
         secant = np.zeros(len(xi_minus_one))
 
@@ -154,15 +154,15 @@ def pseudo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = [])
             time_period = result.x[3]
 
             if result.success == True:
-                x_vals[0,i+1] = result.x[1]
-                x_vals[1,i+1] = result.x[2]
+                y_vals[0,i+1] = result.x[1]
+                y_vals[1,i+1] = result.x[2]
                 # x_vals.append(result.x[1:])
                 c_vals.append(result.x[0])
             
             if i > no_of_steps:
                 break
             prediction = xi + secant
-    return [c_vals, x_vals]
+    return [c_vals, y_vals]
 
 
 def hopf_ode(t,y,b): #Keeping t in in case our ode reuires it
