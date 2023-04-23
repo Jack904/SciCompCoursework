@@ -64,7 +64,7 @@ def natural_parameter(ode, initial_point, p0, p1, no_of_steps, discretisation = 
                 c_vals.append(result.x[0])
     return [x_vals, c_vals]
 
-def psuedo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = []):
+def pseudo_parameter(ode, initial_point,p0,p1, no_of_steps, discretisation = []):
 
     if discretisation == []:
         h = (abs(p0-p1))/no_of_steps
@@ -168,13 +168,13 @@ def hopf_ode(t,y,b): #Keeping t in in case our ode reuires it
 
 if __name__ == "__main__":
     # y,x = natural_parameter(funct, 1.521, -2,2,100)
-    # px,py = psuedo_parameter(funct, 1.521 ,-2,3, 200)
+    # px,py = pseudo_parameter(funct, 1.521 ,-2,3, 200)
     # initial_guess = [0.8, 0.2,30]
     # a =1
     # b =0.1
     # d =0.1
     # condish = [a,b,d]
-    y,x = psuedo_parameter(hopf_ode, (1,0,6), 0,2,200, discretisation='shooting')
+    y,x = pseudo_parameter(hopf_ode, (1,0,6), 0,2,200, discretisation='shooting')
     plt.plot(y,x[0][0:len(y)],'o', label = 'Y1')
     plt.plot(y,x[1][0:len(y)],'o', label = 'Y2')
     
