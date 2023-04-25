@@ -30,7 +30,7 @@ def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver, args = []):
     t_total = np.zeros(max_no_steps+1)
     
     
-    t_total[0] = t_1pyt
+    t_total[0] = t_1
     x_n = x_1
     t_n = t_1
     output_check = ode(0,x_1,*args) 
