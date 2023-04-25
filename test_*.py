@@ -1,5 +1,6 @@
 from Numerical_Shooting import shooting, shooting_solve
 from IVPODEs import solve_to, hopf_ode
+from ImplicitEuler import *
 import scipy
 import matplotlib.pyplot as plt
 import math
@@ -41,8 +42,30 @@ def test_shooting_solve_time_period():
     print(output[3])
     print(2*math.pi)
     assert np.isclose(output[3],2*math.pi, rtol = 1e-4)
-
-
+def test_implicit_euler_dirichlet():
+    output,X =  ImplicitEuler(101,0,1,0,0,2,InitialCond,0.01,0.1)
+    U_exact_real = np.exp(-0.2*np.pi**2)
+    assert np.isclose(output[49,-1],U_exact_real,atol = 1e-2)
+def test_crank_nicholson_dirichlet():
+    output,X =  CrankNicholson(101,0,1,0,0,2,InitialCond,0.01,0.1)
+    U_exact_real = np.exp(-0.2*np.pi**2)
+    assert np.isclose(output[49,-1],U_exact_real,atol = 1e-2)
+def test_explicit_euler_dirichlet():
+    output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1)
+    U_exact_real = np.exp(-0.2*np.pi**2)
+    assert np.isclose(output[-1][49],U_exact_real,atol = 1e-2)
+def test_RK4_dirichlet():
+    output,X =  RK4PDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1)
+    U_exact_real = np.exp(-0.2*np.pi**2)
+    assert np.isclose(output[-1][49],U_exact_real,atol = 1e-2)
+def test_explicit_euler_bratu_dirichlet():
+    output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,1, q=q)
+    U_exact_real = (1/(2*1))*(0.5-0)*(0.5-1)
+    assert np.isclose(output[-1][49],U_exact_real,atol = 1e-2)
+def test_RK4_bratu_dirichlet():
+    output,X =  RK4PDESolver(101,0,1,0,0,2,InitialCond,0.01,1,q = q)
+    U_exact_real = (1/(2*1))*(0.5-0)*(0.5-1)
+    assert np.isclose(output[-1][49],U_exact_real,atol = 1e-2)
 if __name__ == '__main__':
     o = -1
     beta = 1

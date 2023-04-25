@@ -12,18 +12,20 @@ def ConstructAandB(n,bc_left,bc_right,bc_left_condition='Dirichlet',
         B = np.zeros(n)
         B[0] = bc_left
         B[n-1] = bc_right
+ 
     elif bc_left_condition == 'Dirichlet' and bc_right_condition == 'Neumann':
         k = np.ones(n)
         A = np.diag(-2*np.ones(n+1)) + np.diag(k, -1) + np.diag(k, 1)
-        A[n+1,n] = 2
+        A[n,n-1] = 2
         B = np.zeros(n+1)
         B[0] = bc_left
         B[n] = 2*bc_right*dx
+ 
     elif bc_left_condition == 'Dirichlet' and bc_right_condition == 'Robin':
         k = np.ones(n)
         A = np.diag(-2*np.ones(n+1)) + np.diag(k, -1) + np.diag(k, 1)
-        A[n+1,n] = 2
-        A[n+1,n+1] = -2(1+robin_gamma*dx)
+        A[n,n-1] = 2
+        A[n,n] = -2*(1+robin_gamma*dx)
         B = np.zeros(n+1)
         B[0] = bc_left
         B[n] = 2*bc_right*dx
@@ -31,11 +33,17 @@ def ConstructAandB(n,bc_left,bc_right,bc_left_condition='Dirichlet',
     return A, B
 def q(x):
     return np.ones(np.size(x))
-def Grid(N,a,b):
-    dx = abs((b-a)/N)
-    
-    GridSpace = np.linspace(a,b,N)
-    x = GridSpace[1:-1]
+def Grid(N,a,b, bc_right_condition = 'Dirichlet'):
+    if bc_right_condition == 'Dirichlet':
+        dx = abs((b-a)/N)
+        
+        GridSpace = np.linspace(a,b,N)
+        x = GridSpace[1:-1]
+    if bc_right_condition == 'Neumann' or bc_right_condition == 'Robin':
+        dx = abs((b-a)/N)
+        
+        GridSpace = np.linspace(a,b+dx,N+1)
+        x = GridSpace[1:-1]
     return GridSpace, dx,x
 def PDE(t,u,D,A_dd,b_dd, dx):
     return D/dx**2 *(A_dd @ u +b_dd)
@@ -54,8 +62,8 @@ def Actual_sol(x,t,a,b,D):
 if __name__ == '__main__':
 
     D = 0.5
-    N = 300
-    A, B = ConstructAandB(N,0,0)
+    N = 100
+    A, B, q = ConstructAandB(N,0,0)
 
     Gridspace, dx, x = Grid(N,0,1)
     print(dx)
