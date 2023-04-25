@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from DiagMat import ConstructAandB, Grid, Actual_sol
 from IVPODEs import solve_to
 import math
+import timeit
 
 def InitialBoundaryConditions(n, no_of_time_steps, dt,bc_left,bc_right,initial_cond,
                                bc_left_condition= 'Dirichlet', bc_right_condition='Dirichlet'):
@@ -34,7 +35,7 @@ def ImplicitEuler(n,a,b,bc_left,bc_right,t_end,initial_cond,dt,D=0.5,
     I = np.identity(n)
     C = (dt*D)/(dx**2)
     i = 0
-    while math.isclose(t,t_end) == False:
+    while i != no_of_time_steps:
         
         if t_end-t > dt:
             t += dt
@@ -61,7 +62,7 @@ def CrankNicholson(n,a,b,bc_left,bc_right,t_end,initial_cond,dt,D=0.5,
     I = np.identity(n)
     C = (dt*D)/(dx**2)
     i = 0
-    while math.isclose(t,t_end) == False:
+    while i != no_of_time_steps:
         
         if t_end-t > dt:
             t += dt
@@ -84,7 +85,7 @@ def RK4PDESolver(n,a,b,bc_left,bc_right,t_end,initial_cond,dt,D=0.5,
     U_sol = InitialBoundaryConditions(n, no_of_time_steps, dt,bc_left,bc_right,initial_cond(x),
                                       bc_left_condition, bc_right_condition)
 
-    x_sol, t_sol = solve_to(PDE , 0,t_end,U_sol[:,0], dt,'RK4', args = [D, A, B, dx])
+    t_sol, x_sol = solve_to(PDE , 0,t_end,U_sol[:,0], dt,'RK4', args = [D, A, B, dx])
     return x_sol, Gridspace
 def EXPEulerPDESolver(n,a,b,bc_left,bc_right,t_end,initial_cond,dt,D=0.5,
                   bc_left_condition= 'Dirichlet', bc_right_condition='Dirichlet',robin_gamma = 0):
@@ -98,7 +99,7 @@ def EXPEulerPDESolver(n,a,b,bc_left,bc_right,t_end,initial_cond,dt,D=0.5,
     U_sol = InitialBoundaryConditions(n, no_of_time_steps, dt,bc_left,bc_right,initial_cond(x),
                                       bc_left_condition, bc_right_condition)
 
-    x_sol, t_sol = solve_to(PDE , 0,t_end,U_sol[:,0], dt,'Euler', args = [D, A, B, dx])
+    t_sol, x_sol = solve_to(PDE , 0,t_end,U_sol[:,0], dt,'Euler', args = [D, A, B, dx])
     return x_sol, Gridspace
 def InitialCond(x):
     return np.sin(np.pi*x)
@@ -107,21 +108,21 @@ def PDE(t,u,D,A_dd,b_dd, dx):
 
 
 if __name__ == '__main__':
-    N = 100
+    N = 101
     D = 0.1
     a = 0
     b = 1
     bc_left = 0
     bc_right = 0
     t_end = 1
-    dt = 0.01
+    dt = 0.001
     real_x = np.linspace(0,1,N)
     
     
     
     
-    # U_exact_rk4, X = RK4PDESolver(N,a,b,bc_left,bc_right,t_end,InitialCond,D) 
-    # U_exact_Euler, X = EXPEulerPDESolver(N,a,b,bc_left,bc_right,t_end,InitialCond,D) 
+    # U_exact_rk4, X = RK4PDESolver(N,a,b,bc_left,bc_right,t_end,InitialCond,dt,D) 
+    # U_exact_Euler, X = EXPEulerPDESolver(N,a,b,bc_left,bc_right,t_end,InitialCond,dt,D) 
     # U_Imp,X_Imp = ImplicitEuler(N,a,b,bc_left,bc_right,t_end,InitialCond,dt,D)
     # U_Crank,X_Crank = CrankNicholson(N,a,b,bc_left,bc_right,t_end,InitialCond,dt,D) 
     # real_U = Actual_sol(real_x,1,0,1,D)
@@ -138,14 +139,15 @@ if __name__ == '__main__':
 
     U_exact_imp, X = ImplicitEuler(N,a,b,bc_left,bc_right,2,InitialCond,dt,D)
     U_exact_crank, X = CrankNicholson(N,a,b,bc_left,bc_right,2,InitialCond,dt,D) 
-    U_exact_rk4, X = RK4PDESolver(N,a,b,bc_left,bc_right,2,InitialCond,D) 
-    U_exact_Euler, X = EXPEulerPDESolver(N,a,b,bc_left,bc_right,2,InitialCond,D) 
+    U_exact_rk4, X = RK4PDESolver(N,a,b,bc_left,bc_right,2,InitialCond,dt,D) 
+    U_exact_Euler, X = EXPEulerPDESolver(N,a,b,bc_left,bc_right,2,InitialCond,dt,D) 
     U_exact_real = np.exp(-0.2*np.pi**2)
-    
-    print(U_exact_imp[499,-1])
-    print(U_exact_crank[499,-1])
-    print(U_exact_rk4[-1][499])
-    print(U_exact_Euler[-1][499])
+    index = np.where(X == 0.5)
+    print(index)
+    print(U_exact_imp[49,-1])
+    print(U_exact_crank[49,-1])
+    print(U_exact_rk4[-1][49])
+    print(U_exact_Euler[-1][49])
     print(U_exact_real)
     
 # Crank Nicholson is closer to the actual value as it is more accurate than the implicit method 

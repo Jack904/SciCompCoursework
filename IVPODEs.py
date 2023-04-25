@@ -60,7 +60,7 @@ def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver, args = []):
             x_total.append(x_n_1)
             
             t_total.append(t_n)
-    return [x_total, t_total]
+    return [t_total, x_total]
 def hopf_ode(t,y): #Keeping t in in case our ode reuires it
     dx_dt = y[0] -y[1] -y[0]*((y[0])**2 +(y[1])**2)
     dy_dt = y[1] +y[0] -y[1]*((y[0])**2 +(y[1])**2)
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     #     error = abs(x_total1[-1]-real_x(1))
     #     errRK4.append(error)
     #print(x_total1)
-    [x_total3, t_total3] = solve_to(dot_x,0,5,1,0.1,'RK4')
+    [t_total3, x_total3] = solve_to(dot_x,0,5,1,0.1,'RK4')
     
     #plt.plot(t_total3, x_total3)
     #plt.plot(t_total1, x_total1)
@@ -109,7 +109,7 @@ if __name__ == '__main__':
     # plt.xlabel('Deltat Max')
     # plt.ylabel('Error')
     # plt.show()
-    [x_total4, t_total4] = solve_to(VanDerPol_Ode,0,10,[0.006,0.006],0.1,'RK4', args = [0.5])
+    [t_total4, x_total4] = solve_to(VanDerPol_Ode,0,10,[0.006,0.006],0.1,'RK4', args = [0.5])
     
     plt.plot(t_total4,x_total4,'o')
     plt.show()

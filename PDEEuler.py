@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from math import ceil
-from JackOde import solve_to
+from IVPODEs import solve_to
 
 def ExpPdeSolver(u, alpha, beta, a, b, t_end, N, D=1, C = 0.49, solver = 'euler'):
     dx = b-a/N

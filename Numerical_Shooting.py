@@ -33,16 +33,16 @@ if __name__ == "__main__":
     d =0.1
     condish = [a,b,d]
     # SOlving the ode
-    # predator = scipy.integrate.solve_ivp(ode,[0, 100],[0.5,0.5],args=condish, rtol = 1e-4)
+    predator = scipy.integrate.solve_ivp(ode,[0, 100],[0.5,0.5],args=condish, rtol = 1e-4)
     #Plotting ODE
     initial_guess = [0.8, 0.15,34]
     # result = scipy.optimize.root(shooting, x0 = initial_guess, args=(ode, condish))
     result = shooting_solve(ode, initial_guess, condish)
     # result = shooting_solve(hopf_ode,[0.06, 0.06, 30],[0])
    
-    # plt.plot(predator.t,predator.y[0,:], label = 'X')
-    # plt.plot(predator.t,predator.y[1,:], label = 'y')
-    # plt.plot(predator.t[38],result.x[1],marker = 'o')
-    # plt.plot(predator.t[38],result.x[0],marker = 'o')
-    # plt.legend()
-    # plt.show()
+    plt.plot(predator.t,predator.y[0,:], label = 'X')
+    plt.plot(predator.t,predator.y[1,:], label = 'y')
+    plt.plot(predator.t[38],result[1],marker = 'o')
+    plt.plot(predator.t[38],result[0],marker = 'o')
+    plt.legend()
+    plt.show()
