@@ -66,6 +66,30 @@ def test_RK4_bratu_dirichlet():
     output,X =  RK4PDESolver(101,0,1,0,0,2,InitialCond,0.01,1,q = q)
     U_exact_real = (1/(2*1))*(0.5-0)*(0.5-1)
     assert np.isclose(output[-1][49],U_exact_real,atol = 1e-2)
+def test_implicit_euler_neumann():
+    output,X =  ImplicitEuler(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
+    assert len(output) == 102
+def test_crank_nicholson_neumann():
+    output,X =  CrankNicholson(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
+    assert len(output) == 102
+def test_explicit_euler_neumann():
+    output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
+    assert len(output[-1]) == 102
+def test_RK4_neumann():
+    output,X =  RK4PDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
+    assert len(output[-1]) == 102
+def test_implicit_euler_robin():
+    output,X =  ImplicitEuler(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma=1)
+    assert len(output) == 102
+def test_crank_nicholson_robin():
+    output,X =  CrankNicholson(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma= 1)
+    assert len(output) == 102
+def test_explicit_euler_robin():
+    output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma= 1)
+    assert len(output[-1]) == 102
+def test_RK4_robin():
+    output,X =  RK4PDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma=1)
+    assert len(output[-1]) == 102
 if __name__ == '__main__':
     o = -1
     beta = 1
