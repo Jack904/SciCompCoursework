@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 
 
@@ -18,11 +19,21 @@ def RK4_step(ode,x_0,t_0,h):
 
 def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver, args = []):
     h = deltat_max
-    x_total = [x_1]
-    t_total = [t_1]
+    max_no_steps = math.ceil(abs(t_2-t_1)/h)
+    if type(x_1) == int:
+        x_total = np.zeros(max_no_steps+1)
+        x_total[0] = x_1
+    else:
+        x_total = np.zeros((max_no_steps+1,len(x_1)))
+        for i in range(len(x_1)):
+            x_total[0,i] = x_1[i]
+    t_total = np.zeros(max_no_steps+1)
+    
+    
+    t_total[0] = t_1pyt
     x_n = x_1
     t_n = t_1
-    output_check = ode(0,x_1,*args)
+    output_check = ode(0,x_1,*args) 
     if type(output_check) == int:
         order = 1
     else:
@@ -30,20 +41,17 @@ def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver, args = []):
         x_n_1 = np.zeros(order)
     if ode_solver == 'Euler':
 
-        while t_n < t_2:
-            
+        for i in range(max_no_steps):
             x_n_1 = x_n + h*np.array(ode(t_n,x_n,*args))
-            
+           
             if t_n+h > t_2:
                 h = abs(t_n-t_2)
             t_n = t_n + h
             x_n = x_n_1
-            x_total.append(x_n_1)
-            t_total.append(t_n)
+            x_total[i+1] = x_n_1
+            t_total[i+1] = t_n
     elif ode_solver == 'RK4':
-        while t_n < t_2:
-            
-                    
+        for i in range(max_no_steps):  
             k1 = ode(t_n,x_n,*args)
                 
             k2 = ode(t_n + h/2,x_n + (h/2)*np.array(k1),*args)
@@ -57,9 +65,8 @@ def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver, args = []):
             t_n = t_n + h
             x_n=x_n_1
             
-            x_total.append(x_n_1)
-            
-            t_total.append(t_n)
+            x_total[i+1] = x_n_1
+            t_total[i+1] = t_n
     return [t_total, x_total]
 def hopf_ode(t,y): #Keeping t in in case our ode reuires it
     dx_dt = y[0] -y[1] -y[0]*((y[0])**2 +(y[1])**2)

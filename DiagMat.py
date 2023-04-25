@@ -6,22 +6,29 @@ import matplotlib.pyplot as plt
 
 def ConstructAandB(n,bc_left,bc_right,bc_left_condition='Dirichlet',
                    bc_right_condition = 'Dirichlet', dx=0, robin_gamma = 0):
-    if bc_left_condition == 'Dirichlet' and bc_right_condition == 'Dirichlet':
+    if (bc_left_condition == 'Dirichlet') and (bc_right_condition == 'Dirichlet'):
         k = np.ones(n-1)
         A = np.diag(-2*np.ones(n)) + np.diag(k, -1) + np.diag(k, 1)
         B = np.zeros(n)
         B[0] = bc_left
         B[n-1] = bc_right
  
-    elif bc_left_condition == 'Dirichlet' and bc_right_condition == 'Neumann':
+    elif (bc_left_condition == 'Dirichlet') and (bc_right_condition == 'Neumann'):
         k = np.ones(n)
         A = np.diag(-2*np.ones(n+1)) + np.diag(k, -1) + np.diag(k, 1)
         A[n,n-1] = 2
         B = np.zeros(n+1)
         B[0] = bc_left
         B[n] = 2*bc_right*dx
- 
-    elif bc_left_condition == 'Dirichlet' and bc_right_condition == 'Robin':
+    elif (bc_left_condition == 'Neumann') and (bc_right_condition == 'Dirichlet'):
+        k = np.ones(n)
+        A = np.diag(-2*np.ones(n+1)) + np.diag(k, -1) + np.diag(k, 1)
+        A[n,n-1] = 2
+        B = np.zeros(n+1)
+        B[0] = bc_left
+        B[n] = 2*bc_right*dx
+
+    elif (bc_left_condition == 'Dirichlet') and (bc_right_condition == 'Robin'):
         k = np.ones(n)
         A = np.diag(-2*np.ones(n+1)) + np.diag(k, -1) + np.diag(k, 1)
         A[n,n-1] = 2
@@ -29,19 +36,74 @@ def ConstructAandB(n,bc_left,bc_right,bc_left_condition='Dirichlet',
         B = np.zeros(n+1)
         B[0] = bc_left
         B[n] = 2*bc_right*dx
-
+    elif (bc_left_condition == 'Neumann') and (bc_right_condition == 'Neumann'):
+        k = np.ones(n+1)
+        A = np.diag(-2*np.ones(n+2)) + np.diag(k, -1) + np.diag(k, 1)
+        A[0,1] = 2
+        A[n,n-1] = 2
+        B = np.zeros(n+2)
+        B[0] = 2*bc_left*dx
+        B[n] = 2*bc_right*dx
+ 
+    elif (bc_left_condition == 'Neumann') and (bc_right_condition == 'Robin'):
+        k = np.ones(n+1)
+        A = np.diag(-2*np.ones(n+2)) + np.diag(k, -1) + np.diag(k, 1)
+        A[0,1] = 2
+        A[n,n-1] = 2
+        A[n,n] = -2*(1+robin_gamma*dx)
+        B = np.zeros(n+2)
+        B[0] = 2*bc_left*dx
+        B[n] = 2*bc_right*dx
+    elif (bc_left_condition == 'Robin') and (bc_right_condition == 'Neumann'):
+        k = np.ones(n+1)
+        A = np.diag(-2*np.ones(n+2)) + np.diag(k, -1) + np.diag(k, 1)
+        A[0,1] = 2
+        A[n,n-1] = 2
+        A[0,0] = -2*(1+robin_gamma*dx)
+        B = np.zeros(n+2)
+        B[0] = 2*bc_left*dx
+        B[n] = 2*bc_right*dx
+    elif (bc_left_condition == 'Robin') and (bc_right_condition == 'Robin'):
+        k = np.ones(n+1)
+        A = np.diag(-2*np.ones(n+2)) + np.diag(k, -1) + np.diag(k, 1)
+        A[0,1] = 2
+        A[n,n-1] = 2
+        A[0,0] = -2*(1+robin_gamma*dx)
+        A[n,n] = -2*(1+robin_gamma*dx)
+        B = np.zeros(n+2)
+        B[0] = 2*bc_left*dx
+        B[n] = 2*bc_right*dx
     return A, B
 def q(x):
     return np.ones(np.size(x))
-def Grid(N,a,b, bc_right_condition = 'Dirichlet'):
-    if bc_right_condition == 'Dirichlet':
+def Grid(N,a,b, bc_left_condition = 'Dirichlet', bc_right_condition = 'Dirichlet'):
+    if (bc_right_condition == 'Dirichlet') and (bc_left_condition == 'Dirichlet'):
         dx = abs((b-a)/N)
         
         GridSpace = np.linspace(a,b,N)
         x = GridSpace[1:-1]
-    if bc_right_condition == 'Neumann' or bc_right_condition == 'Robin':
+    elif (bc_right_condition == 'Dirichlet') and (bc_left_condition == 'Neumann'):
         dx = abs((b-a)/N)
-        
+        GridSpace = np.linspace(a,b+dx,N+1)
+        x = GridSpace[1:-1]
+    elif (bc_right_condition == 'Neumann') and (bc_left_condition == 'Dirichlet'):
+        dx = abs((b-a)/N)
+        GridSpace = np.linspace(a,b+dx,N+1)
+        x = GridSpace[1:-1]
+    elif (bc_right_condition == 'Dirichlet') and (bc_left_condition == 'Robin'):
+        dx = abs((b-a)/N)
+        GridSpace = np.linspace(a,b+dx,N+1)
+        x = GridSpace[1:-1]
+    elif (bc_right_condition == 'Robin') and (bc_left_condition == 'Dirichlet'):
+        dx = abs((b-a)/N)
+        GridSpace = np.linspace(a,b+dx,N+1)
+        x = GridSpace[1:-1]
+    elif (bc_right_condition == 'Neumann' or 'Robin') and (bc_left_condition == 'Neumann' or 'Robin'):
+        dx = abs((b-a)/N)
+        GridSpace = np.linspace(a,b+2*dx,N+2)
+        x = GridSpace[1:-1]
+    else:
+        dx = abs((b-a)/N)
         GridSpace = np.linspace(a,b+dx,N+1)
         x = GridSpace[1:-1]
     return GridSpace, dx,x
