@@ -25,15 +25,15 @@ def test_solve_to_euler():
     [output_t, output_x] = solve_to(ode,0,1,[1,0,1],0.001,'Euler', args = [1,-1])
     print(output_x)
     print(ode_sols(1,1))
-    assert np.isclose(output_x[-1,0], ode_sols(1,1)[0], rtol = 1e-3)
-    assert np.isclose(output_x[-1,1], ode_sols(1,1)[1], rtol = 1e-3)
-    assert np.isclose(output_x[-1,2], ode_sols(1,1)[2], rtol = 1e-3)
+    assert np.isclose(output_x[0,-1], ode_sols(1,1)[0], rtol = 1e-3)
+    assert np.isclose(output_x[1,-1], ode_sols(1,1)[1], rtol = 1e-3)
+    assert np.isclose(output_x[2,-1], ode_sols(1,1)[2], rtol = 1e-3)
 
 def test_solve_to_rk4():
     [output_t, output_x] = solve_to(ode,0,1,[1,0,1],0.001,'RK4', args = [1,-1])
-    assert np.isclose(output_x[-1,0], ode_sols(1,1)[0], rtol = 1e-5)
-    assert np.isclose(output_x[-1,1], ode_sols(1,1)[1], rtol = 1e-5)
-    assert np.isclose(output_x[-1,2], ode_sols(1,1)[2], rtol = 1e-5)
+    assert np.isclose(output_x[0,-1], ode_sols(1,1)[0], rtol = 1e-5)
+    assert np.isclose(output_x[1,-1], ode_sols(1,1)[1], rtol = 1e-5)
+    assert np.isclose(output_x[2,-1], ode_sols(1,1)[2], rtol = 1e-5)
 def test_shooting_solve():
     output = shooting_solve(ode,[1,0,1,6], [1,-1])
     assert np.isclose(output[0],ode_sols(4*math.pi,1)[0], atol = 1e-2)
@@ -41,8 +41,6 @@ def test_shooting_solve():
     assert np.isclose(output[2],ode_sols(4*math.pi,1)[2], atol = 1e-2)
 def test_shooting_solve_time_period():
     output = shooting_solve(ode,[1,0,1,6], [1,-1])
-    print(output[3])
-    print(2*math.pi)
     assert np.isclose(output[3],2*math.pi, rtol = 1e-4)
 def test_implicit_euler_dirichlet():
     output,X =  ImplicitEuler(101,0,1,0,0,2,InitialCond,0.01,0.1)
@@ -55,19 +53,19 @@ def test_crank_nicholson_dirichlet():
 def test_explicit_euler_dirichlet():
     output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1)
     U_exact_real = np.exp(-0.2*np.pi**2)
-    assert np.isclose(output[-1,49],U_exact_real,atol = 1e-2)
+    assert np.isclose(output[49,-1],U_exact_real,atol = 1e-2)
 def test_RK4_dirichlet():
     output,X =  RK4PDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1)
     U_exact_real = np.exp(-0.2*np.pi**2)
-    assert np.isclose(output[-1,49],U_exact_real,atol = 1e-2)
+    assert np.isclose(output[49,-1],U_exact_real,atol = 1e-2)
 def test_explicit_euler_bratu_dirichlet():
     output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,1, q=q)
     U_exact_real = (1/(2*1))*(0.5-0)*(0.5-1)
-    assert np.isclose(output[-1,49],U_exact_real,atol = 1e-2)
+    assert np.isclose(output[49,-1],U_exact_real,atol = 1e-2)
 def test_RK4_bratu_dirichlet():
     output,X =  RK4PDESolver(101,0,1,0,0,2,InitialCond,0.01,1,q = q)
     U_exact_real = (1/(2*1))*(0.5-0)*(0.5-1)
-    assert np.isclose(output[-1,49],U_exact_real,atol = 1e-2)
+    assert np.isclose(output[49,-1],U_exact_real,atol = 1e-2)
 def test_implicit_euler_neumann():
     output,X =  ImplicitEuler(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
     assert len(output) == 102
@@ -76,10 +74,10 @@ def test_crank_nicholson_neumann():
     assert len(output) == 102
 def test_explicit_euler_neumann():
     output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
-    assert len(output[-1]) == 102
+    assert len(output) == 102
 def test_RK4_neumann():
     output,X =  RK4PDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
-    assert len(output[-1]) == 102
+    assert len(output) == 102
 def test_implicit_euler_robin():
     output,X =  ImplicitEuler(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma=1)
     assert len(output) == 102
@@ -88,10 +86,10 @@ def test_crank_nicholson_robin():
     assert len(output) == 102
 def test_explicit_euler_robin():
     output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma= 1)
-    assert len(output[-1]) == 102
+    assert len(output) == 102
 def test_RK4_robin():
     output,X =  RK4PDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma=1)
-    assert len(output[-1]) == 102
+    assert len(output) == 102
 if __name__ == '__main__':
     o = -1
     beta = 1
