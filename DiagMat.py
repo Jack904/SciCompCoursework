@@ -4,8 +4,46 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def ConstructAandB(n,bc_left,bc_right,bc_left_condition='Dirichlet',
-                   bc_right_condition = 'Dirichlet', dx=0, robin_gamma = 0):
+def ConstructAandB(n, # number of gridpoints
+                   bc_left, # left boundary condition
+                   bc_right, # right boundary condition
+                   bc_left_condition='Dirichlet', # type of boundary condition on left side
+                   bc_right_condition = 'Dirichlet', # type of boundary condition on right side
+                   dx=0, # grid step size
+                   robin_gamma = 0 # the coefficient of the independent variable in the boundary condition
+                   ):
+    """
+    A function that constructs the Add and Bdd matrices to be used to solve
+    PDEs
+
+    Parameters
+    ----------
+    n : int
+        Number of gridpoints
+    bc_left : int
+        The left most boundary condition
+    bc_right : int
+        The right most boundary condition
+    bc_left_condition : str
+        The type of boundary condition that the left boundary condition is.
+        This can be between 'Dirichlet', 'Neumann' and 'Robin'
+    bc_right_condition : str
+        The type of boundary condition that the right boundary condition is.
+        This can be between 'Dirichlet', 'Neumann' and 'Robin'
+    dx : int
+        Grid step size
+    robin_gamma : int
+        This is the coefficient of the independent variable of the robin
+        boundary condition of the form
+        
+        boundary_condition  = bc - robin_gamma*u(b)
+
+        where bc is equal to the input of either bc_Left or bc_right 
+        (depending on which condition is being evaluated).
+    Returns
+    -------
+    Returns the Add and Bdd matrices
+    """
     if (bc_left_condition == 'Dirichlet') and (bc_right_condition == 'Dirichlet'):
         k = np.ones(n-1)
         A = np.diag(-2*np.ones(n)) + np.diag(k, -1) + np.diag(k, 1)
@@ -74,9 +112,35 @@ def ConstructAandB(n,bc_left,bc_right,bc_left_condition='Dirichlet',
         B[0] = 2*bc_left*dx
         B[n] = 2*bc_right*dx
     return A, B
-def q(x):
-    return np.ones(np.size(x))
-def Grid(N,a,b, bc_left_condition = 'Dirichlet', bc_right_condition = 'Dirichlet'):
+
+def Grid(N, # Number of grid points
+         a, # initial value
+         b, # last value
+         bc_left_condition = 'Dirichlet', # type of boundary condition on left side
+         bc_right_condition = 'Dirichlet'# type of boundary condition on right side
+         ):
+    """
+    A function that constructs the gridspace required to solve PDEs across
+
+    Parameters
+    ----------
+    N : int
+        Number of gridpoints
+    a : int
+        The initial x to start the grid upon
+    b : int
+        The last point to end the grid upon
+    bc_left_condition : str
+        The type of boundary condition that the left boundary condition is.
+        This can be between 'Dirichlet', 'Neumann' and 'Robin'
+    bc_right_condition : str
+        The type of boundary condition that the right boundary condition is.
+        This can be between 'Dirichlet', 'Neumann' and 'Robin'
+   
+    Returns
+    -------
+    Returns the Add and Bdd matrices
+    """
     if (bc_right_condition == 'Dirichlet') and (bc_left_condition == 'Dirichlet'):
         dx = abs((b-a)/N)
         
@@ -107,19 +171,14 @@ def Grid(N,a,b, bc_left_condition = 'Dirichlet', bc_right_condition = 'Dirichlet
         GridSpace = np.linspace(a,b+dx,N+1)
         x = GridSpace[1:-1]
     return GridSpace, dx,x
-def PDE(t,u,D,A_dd,b_dd, dx):
-    return D/dx**2 *(A_dd @ u +b_dd)
+
+## Functions returning real solutions
 def DiffusionIC(x,a,b):
     return np.sin((np.pi*(x-a))/(b-a))
-def InitialCond(f,bc_left, bc_right):
-    u = np.zeros(len(f)+2)
-    u[0] = bc_left
-    for i in range(len(f)):
-        u[i+1] = f[i]
-    u[-1] = bc_right
-    return u
+
 def Actual_sol(x,t,a,b,D):
     return (np.exp(-(D*np.pi**2 *t)/(b-a)**2))*(np.sin((np.pi*(x-a))/(b-a)))
+
 
 if __name__ == '__main__':
 
