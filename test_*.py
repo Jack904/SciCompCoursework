@@ -1,6 +1,6 @@
 from Numerical_Shooting import shooting, shooting_solve
 from IVPODEs import solve_to, hopf_ode
-from ImplicitEuler import *
+from PDESolvers import *
 import scipy
 import matplotlib.pyplot as plt
 import math
@@ -46,8 +46,8 @@ def test_implicit_euler_dirichlet():
     output,X =  ImplicitEuler(101,0,1,0,0,2,InitialCond,0.01,0.1)
     U_exact_real = np.exp(-0.2*np.pi**2)
     assert np.isclose(output[49,-1],U_exact_real,atol = 1e-2)
-def test_crank_nicholson_dirichlet():
-    output,X =  CrankNicholson(101,0,1,0,0,2,InitialCond,0.01,0.1)
+def test_crank_nicolson_dirichlet():
+    output,X =  CrankNicolson(101,0,1,0,0,2,InitialCond,0.01,0.1)
     U_exact_real = np.exp(-0.2*np.pi**2)
     assert np.isclose(output[49,-1],U_exact_real,atol = 1e-2)
 def test_explicit_euler_dirichlet():
@@ -69,8 +69,8 @@ def test_RK4_bratu_dirichlet():
 def test_implicit_euler_neumann():
     output,X =  ImplicitEuler(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
     assert len(output) == 102
-def test_crank_nicholson_neumann():
-    output,X =  CrankNicholson(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
+def test_crank_nicolson_neumann():
+    output,X =  CrankNicolson(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
     assert len(output) == 102
 def test_explicit_euler_neumann():
     output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Neumann')
@@ -81,8 +81,8 @@ def test_RK4_neumann():
 def test_implicit_euler_robin():
     output,X =  ImplicitEuler(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma=1)
     assert len(output) == 102
-def test_crank_nicholson_robin():
-    output,X =  CrankNicholson(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma= 1)
+def test_crank_nicolson_robin():
+    output,X =  CrankNicolson(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma= 1)
     assert len(output) == 102
 def test_explicit_euler_robin():
     output,X =  EXPEulerPDESolver(101,0,1,0,0,2,InitialCond,0.01,0.1,bc_right_condition='Robin', robin_gamma= 1)

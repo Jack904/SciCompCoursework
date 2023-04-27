@@ -180,30 +180,6 @@ def Actual_sol(x,t,a,b,D):
     return (np.exp(-(D*np.pi**2 *t)/(b-a)**2))*(np.sin((np.pi*(x-a))/(b-a)))
 
 
-if __name__ == '__main__':
-
-    D = 0.5
-    N = 100
-    A, B, q = ConstructAandB(N,0,0)
-
-    Gridspace, dx, x = Grid(N,0,1)
-    print(dx)
-    # u = np.linalg.solve(A,-B - dx**2 * (q(x)))
-    sol = solve_ivp(PDE , (0, 1), InitialCond(DiffusionIC(x,0,1),0,0),args = [D, A, B, dx])
-    t = sol.t
-    u = sol.y
-
-
-    real_x = np.linspace(0,1,100)
-    real_u = Actual_sol(real_x,1,0,1,D)
-
-
-    plt.plot(Gridspace,u[:,-1],'o',label = 'Numerical')
-
-    plt.plot(real_x,real_u,'o',label = 'Real')
-    plt.legend(loc = 'upper left')
-    plt.show()
-
 
 
 
