@@ -4,6 +4,10 @@ import matplotlib.animation as animation
 from math import ceil
 from IVPODEs import solve_to
 
+# This is my first attempt at solving PDEs with the explicit euler method
+# This was before I had decided to construct matrices to make the process of 
+# solving them a lot easier
+
 def ExpPdeSolver(u, alpha, beta, a, b, t_end, N, D=1, C = 0.49, solver = 'euler'):
     dx = b-a/N
     dt = ((dx**2)/D)*(C)

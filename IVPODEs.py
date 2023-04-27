@@ -5,7 +5,11 @@ import math
 
 
 
-def euler_step(ode,x_0,t_0,h):
+def euler_step(ode, # the ODE to be used
+               x_0, # the initial point
+               t_0, # the initial time
+               h # the time step
+               ):
     """
     A function that does one time step solving an ODE using the euler method
 
@@ -27,7 +31,11 @@ def euler_step(ode,x_0,t_0,h):
     x_1 = x_0 + h*(ode(t_0,x_0))
     return x_1
 
-def RK4_step(ode,x_0,t_0,h):
+def RK4_step(ode, # the ODE to be used
+             x_0, # the initial point
+             t_0, # the initial time
+             h # the time step
+             ):
     """
     A function that does one time step solving an ODE using the RK4 method
 
@@ -53,7 +61,14 @@ def RK4_step(ode,x_0,t_0,h):
     x_1 = x_0 + (1/6)*(k1 +2*k2 +2*k3 +k4)*(h)
     return x_1
 
-def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver, args = []):
+def solve_to(ode, # the ODE to be used
+             t_1, # the initial time 
+             t_2, # the end time
+             x_1, # the initial point
+             deltat_max, # the maximum time step
+             ode_solver, # the method required to solve the ODE
+             args = [] # any conditions needed in the ODE
+             ):
     """
     A function that solves an initial value ODE.
 
@@ -65,7 +80,7 @@ def solve_to(ode,t_1,t_2,x_1,deltat_max,ode_solver, args = []):
         The initial time that the initial point occurs at
     t_2 : int
         The last time point that the user requires to be solved
-    x_1 : numpy.array
+    x_1 : int, numpy.array
         The initial value that occurs at t_1
     deltat_max: int
         The maximum step size that the user would like to take
